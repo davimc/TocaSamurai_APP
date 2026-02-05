@@ -9,9 +9,9 @@ import Link from "next/link";
 export default function Sidebar() {
   const navigation = [
     // { name: "Painel", href: "/", icon: DashboardIcon },
-    { name: "Alunos", href: "/alunos", icon: PersonIcon },
-    { name: "Pagamentos", href: "/pagamentos", icon: CreditCardIcon },
-    { name: "Horários", href: "/horarios", icon: CalendarMonthIcon },
+    { name: "Alunos", href: "/students", icon: PersonIcon },
+    { name: "Pagamentos", href: "/payments", icon: CreditCardIcon },
+    { name: "Horários", href: "/schedules", icon: CalendarMonthIcon },
   ];
   //   const pathname = usePathname();
 

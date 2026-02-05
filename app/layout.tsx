@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import MuiProvider from "../providers/MuiProvider";
+import MuiProvider from "@/providers/MuiProvider";
+import Sidebar from "@/components/sidebar";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -22,8 +21,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.variable}`}>
-        <MuiProvider>{children}</MuiProvider>
+      <body className={inter.variable}>
+        <MuiProvider>
+          <div className="flex min-h-screen">
+            <Sidebar />
+            <main className="ml-64 flex-1">{children}</main>
+          </div>
+        </MuiProvider>
       </body>
     </html>
   );
