@@ -1,14 +1,16 @@
+"use client";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenterOutlined";
 import DashboardIcon from "@mui/icons-material/DashboardOutlined";
 import PersonIcon from "@mui/icons-material/PersonOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonthOutlined";
 import CreditCardIcon from "@mui/icons-material/CreditCardOutlined";
 import Link from "next/link";
-// import { usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { cn } from "lib/utils/cn";
 
 export default function Sidebar() {
   const navigation = [
-    // { name: "Painel", href: "/", icon: DashboardIcon },
+    { name: "Painel", href: "/", icon: DashboardIcon },
     { name: "Alunos", href: "/students", icon: PersonIcon },
     { name: "Pagamentos", href: "/payments", icon: CreditCardIcon },
     { name: "Horários", href: "/schedules", icon: CalendarMonthIcon },
@@ -32,27 +34,18 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex flex-col flex-1 space-y-1 p-4 gap-3">
-        <Link
-          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors bg-primary text-primary-foreground border border-primary height-12"
-          href={"/"}
-        >
-          <DashboardIcon className="h-5 w-5" />
-          <p className="text-xl">Painel</p>
-        </Link>
-
         {navigation.map((item) => {
-          // const isActive = usePathname() === item.href;
+          const isActive = usePathname() === item.href;
           return (
             <Link
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-muted-foreground hover:bg-sidebar-accent hover:text-foreground text-xl height-12"
               key={item.name}
               href={item.href}
-              //   className={cn(
-              //     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-              //     isActive
-              //       ? "bg-primary text-primary-foreground"
-              //       : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
-              //   )}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                isActive
+                  ? "bg-primary text-primary-foreground border border-primary height-12"
+                  : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
+              )}
             >
               <item.icon className="h-5 w-5" />
               {item.name}
