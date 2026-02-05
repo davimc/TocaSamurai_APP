@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "lib/utils/cn";
 
 export default function Sidebar() {
+  const pathname = usePathname();
   const navigation = [
     { name: "Painel", href: "/", icon: DashboardIcon },
     { name: "Alunos", href: "/students", icon: PersonIcon },
@@ -35,7 +36,7 @@ export default function Sidebar() {
 
       <nav className="flex flex-col flex-1 space-y-1 p-4 gap-3">
         {navigation.map((item) => {
-          const isActive = usePathname() === item.href;
+          const isActive = pathname === item.href;
           return (
             <Link
               key={item.name}
