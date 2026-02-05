@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Avatar,
-  Badge,
-  Card,
-  CardContent,
-  CardHeader,
-  Typography,
-} from "@mui/material";
+import { Avatar, Badge, Card, CardContent, Typography } from "@mui/material";
 
 interface Student {
   id: string;
@@ -62,9 +55,7 @@ export default function RecentStudents({ students }: RecentStudentsProps) {
               >
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10 border border-border">
-                    {/* <AvatarFallback className="bg-primary/20 text-primary text-sm"> */}
                     {getInitials(student.full_name)}
-                    {/* </AvatarFallback> */}
                   </Avatar>
                   <div>
                     <p className="font-medium text-foreground">
@@ -77,7 +68,6 @@ export default function RecentStudents({ students }: RecentStudentsProps) {
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge
-                    // variant={student.status === "active" ? "default" : "secondary"}
                     className={
                       student.status === "active"
                         ? "bg-green-600/20 text-green-500 hover:bg-green-600/30"

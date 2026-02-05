@@ -38,18 +38,21 @@ export default function Home() {
   ];
   const todayClasses = [
     {
+      id: "1",
       start_time: "18:00",
       end_time: "19:00",
       instructor: "Marcelo",
       modalities: { name: "Jiu-Jitsu" },
     },
     {
+      id: "2",
       start_time: "19:00",
       end_time: "20:00",
       instructor: "James",
       modalities: { name: "Muay Thai" },
     },
     {
+      id: "3",
       start_time: "20:00",
       end_time: "21:00",
       instructor: "Carlos",

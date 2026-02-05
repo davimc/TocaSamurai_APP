@@ -1,13 +1,7 @@
 "use client";
 
 import Clock from "@mui/icons-material/AccessAlarmOutlined";
-import {
-  Badge,
-  Card,
-  CardContent,
-  CardHeader,
-  Typography,
-} from "@mui/material";
+import { Badge, Card, CardContent, Typography } from "@mui/material";
 
 interface ClassSchedule {
   id: string;
