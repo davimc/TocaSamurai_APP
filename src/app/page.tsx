@@ -1,5 +1,7 @@
 import DashboardStats from "@/components/dashboard";
+import RecentStudents from "@/components/RecentStudents";
 import Sidebar from "@/components/sidebar";
+import { TodaySchedule } from "@/components/TodaySchedules";
 
 export default function Home() {
   // Get today's day of week (0 = Sunday, 1 = Monday, etc.)
@@ -18,10 +20,41 @@ export default function Home() {
   const totalStudents = 120; // Example data
   const activeStudents = 85; // Example data
   const pendingPayments = 15; // Example data
+  const recentStudents = [
+    {
+      id: "1",
+      full_name: "João Silva",
+      email: "joao.silva@example.com",
+      status: "active",
+      created_at: "2023-01-15T10:00:00Z",
+    },
+    {
+      id: "2",
+      full_name: "Maria Oliveira",
+      email: "maria.oliveira@example.com",
+      status: "inactive",
+      created_at: "2023-01-16T14:30:00Z",
+    },
+  ];
   const todayClasses = [
-    { time: "18:00", class: "Jiu Jitsu Kids" },
-    { time: "19:00", class: "Muay Thai Teens" },
-    { time: "20:00", class: "Jiu Jitsu Adults" },
+    {
+      start_time: "18:00",
+      end_time: "19:00",
+      instructor: "Marcelo",
+      modalities: { name: "Jiu-Jitsu" },
+    },
+    {
+      start_time: "19:00",
+      end_time: "20:00",
+      instructor: "James",
+      modalities: { name: "Muay Thai" },
+    },
+    {
+      start_time: "20:00",
+      end_time: "21:00",
+      instructor: "Carlos",
+      modalities: { name: "Taekwondo" },
+    },
   ]; // Example data
 
   return (
@@ -47,8 +80,9 @@ export default function Home() {
           />
 
           <div className="mt-8 grid gap-8 lg:grid-cols-2">
-            {/* <RecentStudents students={recentStudents ?? []} />
-            <TodaySchedule classes={todayClasses ?? []} /> */}
+            <RecentStudents students={recentStudents ?? []} />
+
+            <TodaySchedule classes={todayClasses ?? []} />
           </div>
         </div>
       </main>
