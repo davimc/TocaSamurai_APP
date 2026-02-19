@@ -8,19 +8,22 @@ import {
   DialogTitle,
   FormControl,
   InputLabel,
+  MenuItem,
   Select,
   TextField,
 } from "@mui/material";
 import Student from "@/entities/students";
 // import { useRouter } from "next/router";
-import { useState } from "react";
-import MenuItem from "node_modules/@mui/material/MenuItem/MenuItem";
+import React, { useState } from "react";
+
+import { PaymentWithStudent } from "@/entities/payments";
 
 interface PaymentFormProps {
-  students: Student[];
+  infos: Student[];
+  onAddPayment: (payment: PaymentWithStudent) => void;
 }
 
-export default function PaymentForm({ students }: PaymentFormProps) {
+export default function PaymentForm({ infos, onAddPayment }: PaymentFormProps) {
   //   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,34 +44,32 @@ export default function PaymentForm({ students }: PaymentFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setLoading(true);
+    const selectedStudent = infos.find((s) => s.id === formData.student_id);
 
-    // const supabase = createClient();
+    if (!selectedStudent) {
+      alert("Aluno não encontrado");
+      setLoading(false);
+      return;
+    }
 
-    // const { error } = await supabase.from("payments").insert({
-    //   student_id: formData.student_id,
-    //   amount: parseFloat(formData.amount),
-    //   due_date: formData.due_date,
-    //   description: formData.description || "Mensalidade",
-    //   status: "pending",
-    // });
+    const newPayment: PaymentWithStudent = {
+      id: crypto.randomUUID(),
+      student_id: formData.student_id,
+      amount: parseFloat(formData.amount),
+      due_date: formData.due_date,
+      status: "pending",
+      created_at: new Date().toISOString(),
+      paid_at: undefined,
+      student: selectedStudent,
+    };
 
-    // if (error) {
-    //   console.error("Error creating payment:", error);
-    //   setLoading(false);
-    //   return;
-    // }
+    onAddPayment(newPayment);
 
     setLoading(false);
     setOpen(false);
-    setFormData({
-      student_id: "",
-      student_name: "",
-      amount: "",
-      due_date: "",
-      description: "",
-    });
-    // router.reload();
+    setFormData(initialFormData);
   };
 
   return (
@@ -107,21 +108,11 @@ export default function PaymentForm({ students }: PaymentFormProps) {
                     })
                   }
                 >
-                  {students.map((student) => (
+                  {infos.map((student) => (
                     <MenuItem key={student.id} value={student.id}>
                       {student.full_name}
                     </MenuItem>
                   ))}
-                  {/* <SelectTrigger className="bg-input border-border text-foreground">
-                <SelectValue placeholder="Selecionar aluno" />
-              </SelectTrigger> */}
-                  {/* <SelectContent className="bg-popover border-border">
-                {students.map((student) => (
-                  <SelectItem key={student.id} value={student.id}>
-                    {student.full_name}
-                  </SelectItem>
-                ))}
-              </SelectContent> */}
                 </Select>
               </div>
 

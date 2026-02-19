@@ -1,3 +1,4 @@
+"use client";
 import PaymentForm from "@/components/PaymentForm";
 import { PaymentsTable } from "@/components/PaymentTable";
 import Payment, { PaymentWithStudent } from "@/entities/payments";
@@ -7,6 +8,7 @@ import CreditCard from "@mui/icons-material/CreditCardOutlined";
 import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import LockClock from "@mui/icons-material/LockClockOutlined";
 import { Card, CardContent } from "@mui/material";
+import { useState } from "react";
 
 interface PaymentsPageProps {
   students: Student[];
@@ -15,8 +17,8 @@ interface PaymentsPageProps {
   totalPending: number;
   totalOverdue: number;
 }
-export default async function PaymentsPage() {
-  const students: Student[] = [
+export default function PaymentsPage() {
+  const studentsStatic: Student[] = [
     {
       id: "1",
       full_name: "João Silva",
@@ -32,7 +34,7 @@ export default async function PaymentsPage() {
       created_at: "2023-01-16T14:30:00Z",
     },
   ];
-  const payments: Payment[] = [
+  const paymentsStatic: Payment[] = [
     {
       id: "1",
       student_id: "1",
@@ -60,26 +62,37 @@ export default async function PaymentsPage() {
     },
   ];
 
-  const paymentWithStudent: PaymentWithStudent[] = payments.map((payment) => {
-    const student = students.find((s) => s.id === payment.student_id);
-    if (!student) {
-      throw new Error(`Student with id ${payment.student_id} not found`);
-    }
+  const paymentWithStudent: PaymentWithStudent[] = paymentsStatic.map(
+    (payment) => {
+      const student = studentsStatic.find((s) => s.id === payment.student_id);
+      if (!student) {
+        throw new Error(`Student with id ${payment.student_id} not found`);
+      }
 
-    return {
-      ...payment,
-      student: student,
-    };
-  });
+      return {
+        ...payment,
+        student: student,
+      };
+    },
+  );
+  const [paymentWithStudentList, setPaymentWithStudentList] = useState<
+    PaymentWithStudent[]
+  >(paymentWithStudent ?? []);
 
-  const totalPaid = payments.filter((p) => p.status === "paid").length;
-  const totalPending = payments.filter((p) => p.status === "pending").length;
-  const totalOverdue = payments.filter((p) => p.status === "overdue").length;
+  const totalPaid = paymentWithStudentList.filter(
+    (p) => p.status === "paid",
+  ).length;
+  const totalPending = paymentWithStudentList.filter(
+    (p) => p.status === "pending",
+  ).length;
+  const totalOverdue = paymentWithStudentList.filter(
+    (p) => p.status === "overdue",
+  ).length;
 
   const stats = [
     {
       title: "Total Registrado",
-      value: payments?.length ?? 0,
+      value: paymentWithStudentList?.length ?? 0,
       icon: CreditCard,
       color: "text-primary",
       bgColor: "bg-primary/20",
@@ -117,7 +130,12 @@ export default async function PaymentsPage() {
               Gerencie os pagamentos dos alunos
             </p>
           </div>
-          <PaymentForm students={students ?? []} />
+          <PaymentForm
+            infos={paymentWithStudentList.map((p) => p.student) ?? []}
+            onAddPayment={(payment) =>
+              setPaymentWithStudentList((prev) => [payment, ...prev])
+            }
+          />
         </div>
 
         <div className="mb-8 grid gap-4 md:grid-cols-4">
@@ -140,7 +158,7 @@ export default async function PaymentsPage() {
           ))}
         </div>
 
-        <PaymentsTable payments={paymentWithStudent ?? []} />
+        <PaymentsTable payments={paymentWithStudentList ?? []} />
       </div>
     </main>
   );
