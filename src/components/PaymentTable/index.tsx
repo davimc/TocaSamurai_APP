@@ -112,7 +112,7 @@ export function PaymentsTable({ payments }: PaymentsTableProps) {
                   {payment.student.full_name}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
-                  {payment.id || "Mensalidade"}
+                  {payment.description || "Mensalidade"}
                 </TableCell>
                 <TableCell className="font-semibold text-foreground">
                   {formatCurrency(payment.amount)}

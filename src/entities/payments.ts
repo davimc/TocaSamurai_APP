@@ -1,3 +1,5 @@
+import Student from "./students";
+
 export default interface Payment {
   id: string;
   student_id: string;
@@ -6,14 +8,9 @@ export default interface Payment {
   paid_at?: string;
   status: "paid" | "pending" | "overdue";
   created_at: string;
+  description?: string;
 }
 
 export interface PaymentWithStudent extends Payment {
-  student: {
-    id: string;
-    full_name: string;
-    email: string;
-    status: "active" | "inactive";
-    created_at: string;
-  };
+  student: Student;
 }
