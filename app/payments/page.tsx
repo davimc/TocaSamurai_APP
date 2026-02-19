@@ -117,7 +117,7 @@ export default async function PaymentsPage() {
               Gerencie os pagamentos dos alunos
             </p>
           </div>
-          {/* <PaymentForm students={students ?? []} /> */}
+          <PaymentForm students={students ?? []} />
         </div>
 
         <div className="mb-8 grid gap-4 md:grid-cols-4">
