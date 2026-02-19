@@ -20,12 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // TODO: Mobile design
     <html lang="pt-BR">
       <body className={inter.variable}>
         <MuiProvider>
           <div className="flex min-h-screen">
             <Sidebar />
-            <main className="ml-64 flex-1">{children}</main>
+            <main className="flex-1">{children}</main>
           </div>
         </MuiProvider>
       </body>
