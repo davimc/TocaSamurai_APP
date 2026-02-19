@@ -59,27 +59,32 @@ export default function DashboardPage() {
     },
   ]; // Example data
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground">
-          Painel de Controle
-        </h1>
-        <p className="text-muted-foreground">
-          Bem-vindo ao sistema de gestão da Toca do Samurai
-        </p>
-      </div>
-      <DashboardStats
-        totalStudents={totalStudents ?? 0}
-        activeStudents={activeStudents ?? 0}
-        pendingPayments={pendingPayments ?? 0}
-        todayClasses={todayClasses?.length ?? 0}
-      />
+    <main className="flex-1 pl-64">
+      <div className="p-8">
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">
+              Painel de Controle
+            </h1>
+            <p className="text-muted-foreground">
+              Bem-vindo ao sistema de gestão da Toca do Samurai
+            </p>
+          </div>
+        </div>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-2">
-        <RecentStudents students={recentStudents ?? []} />
+        <DashboardStats
+          totalStudents={totalStudents ?? 0}
+          activeStudents={activeStudents ?? 0}
+          pendingPayments={pendingPayments ?? 0}
+          todayClasses={todayClasses?.length ?? 0}
+        />
 
-        <TodaySchedule classes={todayClasses ?? []} />
+        <div className="mt-8 grid gap-8 lg:grid-cols-2">
+          <RecentStudents students={recentStudents ?? []} />
+
+          <TodaySchedule classes={todayClasses ?? []} />
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
