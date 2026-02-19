@@ -1,4 +1,4 @@
-import DashboardStats from "@/components/dashboard";
+import DashboardStats from "@/components/Dashboard";
 import RecentStudents from "@/components/RecentStudents";
 import { TodaySchedule } from "@/components/TodaySchedules";
 
