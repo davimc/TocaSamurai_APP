@@ -9,7 +9,7 @@ export default interface Payment {
 }
 
 export interface PaymentWithStudent extends Payment {
-  students: {
+  student: {
     id: string;
     full_name: string;
     email: string;
