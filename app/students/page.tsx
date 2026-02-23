@@ -1,20 +1,44 @@
 // import { StudentForm } from "@/components/student-form";
 // import { StudentsTable } from "@/components/students-table";
+import { StudentsTable } from "@/components/StudentTable";
+import Student from "@/entities/students";
 import Search from "@mui/icons-material/SearchOutlined";
 import { Input } from "@mui/material";
 import { Suspense } from "react";
 
 export default function StudentsPage() {
-  const students = [
+  const students: Student[] = [
     {
       id: "1",
       full_name: "João Silva",
       email: "joao.silva@example.com",
+      status: "active",
+      created_at: "2024-01-15T10:00:00Z",
+      phone: "11987654321",
+      student_modalities: [
+        {
+          modalities: { name: "Jiu-Jitsu" },
+          belt_ranks: { name: "Faixa Azul", color: "#0000FF" },
+        },
+        {
+          modalities: { name: "Muay Thai" },
+          belt_ranks: null,
+        },
+      ],
     },
     {
       id: "2",
       full_name: "Maria Oliveira",
       email: "maria.oliveira@example.com",
+      status: "inactive",
+      created_at: "2024-02-20T14:30:00Z",
+      phone: "1234567890",
+      student_modalities: [
+        {
+          modalities: { name: "Taekwondo" },
+          belt_ranks: { name: "Faixa Vermelha", color: "#FF0000" },
+        },
+      ],
     },
   ];
 
@@ -71,7 +95,7 @@ export default function StudentsPage() {
             </div>
           </div>
 
-          {/* <StudentsTable students={students ?? []} /> */}
+          <StudentsTable students={students} />
         </div>
         {/* </Suspense> */}
       </main>

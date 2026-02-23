@@ -4,4 +4,14 @@ export default interface Student {
   email: string;
   status: "active" | "inactive";
   created_at: string;
+  phone?: string;
+  student_modalities: {
+    modalities: {
+      name: string;
+    };
+    belt_ranks: {
+      name: string;
+      color: string;
+    } | null;
+  }[];
 }
