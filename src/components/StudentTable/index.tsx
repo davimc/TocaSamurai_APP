@@ -1,6 +1,6 @@
 "use client";
 
-import Student from "@/entities/students";
+import Student from "@/models/students";
 import {
   Dialog,
   Avatar,
@@ -14,19 +14,14 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  ButtonGroup,
+  Tooltip,
 } from "@mui/material";
+import Trash from "@mui/icons-material/DeleteOutlineOutlined";
+import Pencil from "@mui/icons-material/CreateOutlined";
+import View from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { useState } from "react";
-
-interface StudentModality {
-  modalities: {
-    name: string;
-  };
-  belt_ranks: {
-    name: string;
-    color: string;
-  } | null;
-}
 
 interface StudentsTableProps {
   students: Student[];
@@ -52,18 +47,51 @@ export function StudentsTable({ students }: StudentsTableProps) {
   return (
     <>
       <div className="rounded-lg border border-border bg-card">
-        <Table>
-          <TableHead>
-            <TableRow className="border-border hover:bg-transparent">
-              <TableCell className="text-muted-foreground">Aluno</TableCell>
-              <TableCell className="text-muted-foreground">Contato</TableCell>
-              <TableCell className="text-muted-foreground">
+        <Table className="w-full">
+          <TableHead className=" bg-muted p-4">
+            <TableRow className="text-right">
+              <TableCell
+                className="text-muted-foreground"
+                sx={{ textAlign: "center" }}
+              >
+                Aluno
+              </TableCell>
+              <TableCell
+                className="text-muted-foreground"
+                sx={{ textAlign: "center" }}
+              >
+                Contato
+              </TableCell>
+              <TableCell
+                className="text-muted-foreground align-middle"
+                sx={{ textAlign: "center" }}
+              >
                 Modalidade
               </TableCell>
-              <TableCell className="text-muted-foreground">Graduação</TableCell>
-              <TableCell className="text-muted-foreground">Status</TableCell>
-              <TableCell className="text-muted-foreground">Cadastro</TableCell>
-              <TableCell className="text-muted-foreground w-[50px]"></TableCell>
+              <TableCell
+                className="text-muted-foreground"
+                sx={{ textAlign: "center" }}
+              >
+                Graduação
+              </TableCell>
+              <TableCell
+                className="text-muted-foreground"
+                sx={{ textAlign: "center" }}
+              >
+                Status
+              </TableCell>
+              <TableCell
+                className="text-muted-foreground"
+                sx={{ textAlign: "center" }}
+              >
+                Cadastro
+              </TableCell>
+              <TableCell
+                className="text-muted-foreground w-[50px]"
+                sx={{ textAlign: "center" }}
+              >
+                Ações
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -82,10 +110,10 @@ export function StudentsTable({ students }: StudentsTableProps) {
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9 border border-border">
-                        {getInitials(student.full_name)}
+                        {getInitials(student.name)}
                       </Avatar>
                       <span className="font-medium text-foreground">
-                        {student.full_name}
+                        {student.name}
                       </span>
                     </div>
                   </TableCell>
@@ -98,15 +126,15 @@ export function StudentsTable({ students }: StudentsTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    {student.student_modalities.length > 0 ? (
+                    {student.martialArtType.length > 0 ? (
                       <div className="flex flex-wrap gap-1">
-                        {student.student_modalities.map((sm, idx) => (
+                        {student.martialArtType.split(",").map((sm, idx) => (
                           <Badge
                             key={idx}
                             color="secondary"
                             className="bg-primary/20 text-primary"
                           >
-                            {sm.modalities.name}
+                            {sm.trim()}
                           </Badge>
                         ))}
                       </div>
@@ -115,43 +143,54 @@ export function StudentsTable({ students }: StudentsTableProps) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {student.student_modalities.length > 0 &&
-                    student.student_modalities[0].belt_ranks ? (
-                      //TODO: criar belt componente para mostrar a graduação com a cor correta
-                      <Badge
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          width: "80%",
-                          backgroundColor:
-                            student.student_modalities[0].belt_ranks.color,
-                          color: "#fff",
-                        }}
-                      >
-                        {student.student_modalities[0].belt_ranks.name}
-                      </Badge>
-                    ) : (
-                      <span className="text-muted-foreground">-</span>
-                    )}
+                    <Badge
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "80%",
+                        backgroundColor: student.belt.color,
+                        color:
+                          student.belt.name === "Branca"
+                            ? "#000000"
+                            : "#FFFFFF",
+                      }}
+                    >
+                      {student.belt.name}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge
-                      color={
-                        student.status === "active" ? "default" : "secondary"
-                      }
+                      color={student.active === true ? "default" : "secondary"}
                       className={
-                        student.status === "active"
+                        student.active === true
                           ? "bg-green-600/20 text-green-500"
                           : "bg-muted text-muted-foreground"
                       }
                     >
-                      {student.status === "active" ? "Ativo" : "Inativo"}
+                      {student.active === true ? "Ativo" : "Inativo"}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatDate(student.created_at)}
+                    {formatDate(student.entryDate.toString())}
                   </TableCell>
                   <TableCell>
+                    <ButtonGroup className="ml-auto">
+                      <Tooltip title="Ver detalhes do aluno" placement="top">
+                        <Button className="border-border text-foreground hover:bg-muted">
+                          <View className="mr-2 h-4 w-4" />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip title="Editar aluno" placement="top">
+                        <Button className="border-border text-foreground hover:bg-muted">
+                          <Pencil />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip title="Excluir aluno" placement="top">
+                        <Button>
+                          <Trash className="mr-2 h-4 w-4" />
+                        </Button>
+                      </Tooltip>
+                    </ButtonGroup>
                     {/* <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
