@@ -12,11 +12,11 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import Student from "@/entities/students";
+import Student from "@/models/students";
 // import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import { PaymentWithStudent } from "@/entities/payments";
+import { PaymentWithStudent } from "@/models/payments";
 
 interface PaymentFormProps {
   infos: Student[];
@@ -110,7 +110,7 @@ export default function PaymentForm({ infos, onAddPayment }: PaymentFormProps) {
                 >
                   {infos.map((student) => (
                     <MenuItem key={student.id} value={student.id}>
-                      {student.full_name}
+                      {student.name}
                     </MenuItem>
                   ))}
                 </Select>

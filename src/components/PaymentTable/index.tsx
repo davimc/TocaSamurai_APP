@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 // import { useRouter } from "next/router";
 import { useState } from "react";
-import { PaymentWithStudent } from "@/entities/payments";
+import { PaymentWithStudent } from "@/models/payments";
 
 interface PaymentsTableProps {
   payments: PaymentWithStudent[];
@@ -109,7 +109,7 @@ export function PaymentsTable({ payments }: PaymentsTableProps) {
             payments.map((payment) => (
               <TableRow key={payment.id} className="border-border">
                 <TableCell className="font-medium text-foreground">
-                  {payment.student.full_name}
+                  {payment.student.name}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   {payment.description || "Mensalidade"}
