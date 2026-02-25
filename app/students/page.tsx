@@ -4,6 +4,7 @@ import { StudentsTable } from "@/components/StudentTable";
 import Student from "@/entities/students";
 import Search from "@mui/icons-material/SearchOutlined";
 import { Input } from "@mui/material";
+import { StudentForm } from "@/components/StudentForm";
 import { Suspense } from "react";
 
 export default function StudentsPage() {
@@ -47,6 +48,13 @@ export default function StudentsPage() {
     { id: "2", name: "Muay Thai" },
     { id: "3", name: "Taekwondo" },
   ];
+  const beltRanks = [
+    { id: "1", name: "Branca", color: "#FFFFFF" },
+    { id: "2", name: "Azul", color: "#0000FF" },
+    { id: "3", name: "Roxa", color: "#800080" },
+    { id: "4", name: "Marrom", color: "#A52A2A" },
+    { id: "5", name: "Preta", color: "#000000" },
+  ];
   // const supabase = await createClient();
 
   // const [{ data: students }, { data: modalities }, { data: beltRanks }] =
@@ -79,10 +87,11 @@ export default function StudentsPage() {
                 Gerencie os alunos da academia
               </p>
             </div>
-            {/* <StudentForm
-                modalities={modalities ?? []}
-                beltRanks={beltRanks ?? []}
-              /> */}
+            <StudentForm
+              students={students ?? []}
+              modalities={modalities ?? []}
+              beltRanks={beltRanks ?? []}
+            />
           </div>
 
           <div className="mb-6">
