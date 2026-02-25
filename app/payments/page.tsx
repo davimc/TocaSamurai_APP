@@ -1,8 +1,8 @@
 "use client";
 import PaymentForm from "@/components/PaymentForm";
 import { PaymentsTable } from "@/components/PaymentTable";
-import Payment, { PaymentWithStudent } from "@/entities/payments";
-import Student from "@/entities/students";
+import Payment, { PaymentWithStudent } from "@/models/payments";
+import Student from "@/models/students";
 import CheckCircle from "@mui/icons-material/CheckCircleOutlined";
 import CreditCard from "@mui/icons-material/CreditCardOutlined";
 import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
@@ -21,14 +21,14 @@ export default function PaymentsPage() {
   const studentsStatic: Student[] = [
     {
       id: "1",
-      full_name: "João Silva",
+      name: "João Silva",
       email: "joao.silva@example.com",
       status: "active",
       created_at: "2023-01-15T10:00:00Z",
     },
     {
       id: "2",
-      full_name: "Maria Oliveira",
+      name: "Maria Oliveira",
       email: "maria.oliveira@example.com",
       status: "inactive",
       created_at: "2023-01-16T14:30:00Z",
