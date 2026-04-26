@@ -1,78 +1,182 @@
 "use client";
+import React from "react";
+import {
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  Divider,
+  Button,
+  Chip,
+  Stack,
+} from "@mui/material";
+
+// Ícones
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenterOutlined";
 import DashboardIcon from "@mui/icons-material/DashboardOutlined";
 import PersonIcon from "@mui/icons-material/PersonOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonthOutlined";
 import CreditCardIcon from "@mui/icons-material/CreditCardOutlined";
+import LogoutIcon from "@mui/icons-material/LogoutOutlined";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "lib/utils/cn";
+
+const DRAWER_WIDTH = 256;
 
 export default function Sidebar() {
   const pathname = usePathname();
+
   const navigation = [
     { name: "Painel", href: "/", icon: DashboardIcon },
     { name: "Alunos", href: "/students", icon: PersonIcon },
     { name: "Pagamentos", href: "/payments", icon: CreditCardIcon },
     { name: "Horários", href: "/schedules", icon: CalendarMonthIcon },
   ];
-  //   const pathname = usePathname();
+
+  const handleLogout = () => {
+    console.log("Saindo...");
+    // Adicione aqui sua lógica de limpeza de token
+  };
 
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-border bg-sidebar px-0 py-4 flex-col bg-background text-foreground">
-      <div className="flex h-16 items-center gap-3 border-b border-border px-6">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-          <FitnessCenterIcon className="h-5 w-5 text-primary-foreground" />
-        </div>
-        <div className="flex flex-col">
-          <span className="text-lg font-bold text-foreground">
+    <Drawer
+      variant="permanent"
+      sx={{
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          boxSizing: "border-box",
+          borderRight: "1px solid",
+          borderColor: "divider",
+          display: "flex",
+          flexDirection: "column",
+        },
+      }}
+    >
+      {/* Header: Logo e Título */}
+      <Box
+        sx={{ p: 2, display: "flex", alignItems: "center", gap: 2, height: 64 }}
+      >
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            bgcolor: "primary.main",
+            borderRadius: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <FitnessCenterIcon sx={{ color: "primary.contrastText" }} />
+        </Box>
+        <Box>
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: 700, lineHeight: 1.2 }}
+          >
             Toca do Samurai
-          </span>
-          <span className="text-xs text-muted-foreground">
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
             Sistema de Gestão
-          </span>
-        </div>
-      </div>
+          </Typography>
+        </Box>
+      </Box>
 
-      <nav className="flex flex-col flex-1 space-y-1 p-4 gap-3">
+      <Divider />
+
+      {/* Navegação Principal */}
+      <List sx={{ flexGrow: 1, px: 1, py: 2 }}>
         {navigation.map((item) => {
           const isActive = pathname === item.href;
           return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-primary text-primary-foreground border border-primary height-12"
-                  : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
-              )}
-            >
-              <item.icon className="h-5 w-5" />
-              {item.name}
-            </Link>
+            <ListItem key={item.name} disablePadding sx={{ mb: 0.5 }}>
+              <ListItemButton
+                component={Link}
+                href={item.href}
+                selected={isActive}
+                sx={{
+                  borderRadius: 2,
+                  "&.Mui-selected": {
+                    bgcolor: "primary.main",
+                    color: "primary.contrastText",
+                    "&:hover": { bgcolor: "primary.dark" },
+                    "& .MuiListItemIcon-root": { color: "inherit" },
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 40,
+                    color: isActive ? "inherit" : "text.secondary",
+                  }}
+                >
+                  <item.icon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.name}
+                  primaryTypographyProps={{
+                    fontSize: "0.875rem",
+                    fontWeight: isActive ? 600 : 500,
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
           );
         })}
-      </nav>
+      </List>
 
-      <div className="border-t border-border p-4">
-        <div className="rounded-lg bg-muted/50 p-3">
-          <p className="text-xs text-muted-foreground">
-            Modalidades oferecidas:
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1">
-            <span className="rounded bg-primary/20 px-2 py-0.5 text-xs text-primary">
-              Jiu-Jitsu
-            </span>
-            <span className="rounded bg-primary/20 px-2 py-0.5 text-xs text-primary">
-              Muay Thai
-            </span>
-            <span className="rounded bg-primary/20 px-2 py-0.5 text-xs text-primary">
-              Taekwondo
-            </span>
-          </div>
-        </div>
-      </div>
-    </aside>
+      <Divider />
+
+      {/* Footer: Modalidades e Logout */}
+      <Box sx={{ p: 2 }}>
+        <Box sx={{ bgcolor: "action.hover", p: 1.5, borderRadius: 2, mb: 2 }}>
+          <Typography
+            variant="caption"
+            sx={{
+              fontWeight: 600,
+              color: "text.secondary",
+              mb: 1,
+              display: "block",
+            }}
+          >
+            MODALIDADES:
+          </Typography>
+          <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+            {["Jiu-Jitsu", "Muay Thai", "Taekwondo"].map((mod) => (
+              <Chip
+                key={mod}
+                label={mod}
+                size="small"
+                color="primary"
+                variant="outlined"
+                sx={{
+                  height: 20,
+                  fontSize: "0.625rem",
+                  bgcolor: "primary.light",
+                  color: "primary.dark",
+                  border: "none",
+                }}
+              />
+            ))}
+          </Stack>
+        </Box>
+
+        <Button
+          fullWidth
+          variant="text"
+          color="error"
+          startIcon={<LogoutIcon />}
+          onClick={handleLogout}
+          sx={{ justifyContent: "flex-start", px: 1.5, py: 1 }}
+        >
+          Sair da Conta
+        </Button>
+      </Box>
+    </Drawer>
   );
 }
