@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import MuiProvider from "@/providers/MuiProvider";
-import Sidebar from "@/components/sidebar";
 import "./globals.css";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { Box } from "@mui/material";
+import Sidebar from "@/components/sidebar";
+import AppShell from "@/components/AppShell";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,15 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // TODO: Mobile design
     <html lang="pt-BR">
       <body className={inter.variable}>
-        <MuiProvider>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="flex-1">{children}</main>
-          </div>
-        </MuiProvider>
+        <AuthProvider>
+          <MuiProvider>
+            <AppShell>{children}</AppShell>
+          </MuiProvider>
+        </AuthProvider>
       </body>
     </html>
   );
