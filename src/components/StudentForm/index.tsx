@@ -8,54 +8,64 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import { NewStudent } from "@/models/students";
+import Input from "../atomic/Input";
+import { createStudent } from "@/services/students";
 
-interface Student {
-  id: string;
-  full_name: string;
-}
-
-interface PaymentFormProps {
-  students: Student[];
-  beltRanks: { name: string; color: string }[];
-  modalities: { name: string }[];
-}
-
-export function StudentForm({ students }: PaymentFormProps) {
+export function StudentForm() {
+  async function onAddFunction(student: NewStudent) {
+    await createStudent(student);
+  }
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const dataAtual = new Date();
   const [formData, setFormData] = useState({
-    student_id: "",
+    name: "",
+    birthdate: dataAtual.getFullYear() - 5 + "-01-01",
+    entryDate: dataAtual.toISOString().split("T")[0],
+    documentNumber: "",
+    personType: "Física",
+    phone: "",
+    street: "",
+    number: "",
+    complement: "",
+    district: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    unidade: "",
+    username: "",
+    password: "",
     amount: "150.0",
-    due_date: "",
+    due_date: new Date().toISOString().split("T")[0],
     description: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
+
     setLoading(true);
 
     setLoading(false);
     setOpen(false);
-    setFormData({
-      student_id: "",
-      amount: "",
-      due_date: "",
-      description: "",
-    });
+    // setFormData({
+    //   name: "",
+    //   birthdate: new Date().toISOString().split("T")[0],
+    //   amount: "150.0",
+    //   due_date: new Date().toLocaleDateString("pt-BR"),
+    //   description: "",
+    // });
     router.refresh();
   };
 
   return (
     <>
       <Button
-        className="bg-primary text-primary-foreground hover:bg-primary/90"
+        className="bg-secondary text-primary-foreground border-border hover:bg-primary/90"
         onClick={() => setOpen(true)}
       >
         <AddCircleOutlineOutlinedIcon className="mr-2 h-4 w-4" />
@@ -67,24 +77,13 @@ export function StudentForm({ students }: PaymentFormProps) {
           <FormControl fullWidth>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <InputLabel className="text-foreground" id="student-label">
-                  Aluno
-                </InputLabel>
-                <Select
-                  labelId="student-label"
-                  value={formData.student_id}
-                  label="aluno"
-                  sx={{ width: "48%" }}
-                  onChange={(e) =>
-                    setFormData({ ...formData, student_id: e.target.value })
-                  }
-                >
-                  {students.map((student) => (
-                    <MenuItem key={student.id} value={student.id}>
-                      {student.full_name}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <Input label="Nome" width="3/5" value={formData.name} />
+                <Input
+                  label="Nascimento"
+                  width="2/5"
+                  type="date"
+                  value={formData.birthdate}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -111,7 +110,7 @@ export function StudentForm({ students }: PaymentFormProps) {
                     value={formData.due_date}
                     slotProps={{
                       inputLabel: {
-                        shrink: true, // Mantém o rótulo em cima
+                        shrink: true,
                       },
                     }}
                     onChange={(e) =>

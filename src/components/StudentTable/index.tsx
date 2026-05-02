@@ -16,18 +16,22 @@ import {
   Button,
   ButtonGroup,
   Tooltip,
+  Stack,
 } from "@mui/material";
 import Trash from "@mui/icons-material/DeleteOutlineOutlined";
 import Pencil from "@mui/icons-material/CreateOutlined";
 import View from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { useState } from "react";
+import StructuredTableCell from "../celular/StructuredTableCell";
+import { StatusType } from "@/models/subscriptions";
 
 interface StudentsTableProps {
-  students: Student[];
+  studentsList: Student[];
 }
 
-export function StudentsTable({ students }: StudentsTableProps) {
+export function StudentsTable({ studentsList }: StudentsTableProps) {
+  const [students, setStudents] = useState(studentsList);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -126,52 +130,45 @@ export function StudentsTable({ students }: StudentsTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    {student.martialArtType.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {student.martialArtType.split(",").map((sm, idx) => (
-                          <Badge
-                            key={idx}
-                            color="secondary"
-                            className="bg-primary/20 text-primary"
-                          >
-                            {sm.trim()}
-                          </Badge>
-                        ))}
-                      </div>
+                    {student.subscriptions.length > 0 ? (
+                      <StructuredTableCell
+                        subscriptions={student.subscriptions}
+                      />
                     ) : (
                       <span className="text-muted-foreground">-</span>
                     )}
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        width: "80%",
-                        backgroundColor: student.belt.color,
-                        color:
-                          student.belt.name === "Branca"
-                            ? "#000000"
-                            : "#FFFFFF",
-                      }}
-                    >
-                      {student.belt.name}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      color={student.active === true ? "default" : "secondary"}
+                    <Stack
+                      color={
+                        student.subscriptions.some(
+                          (s) => s.status === StatusType.ATIVO,
+                        )
+                          ? "default"
+                          : "secondary"
+                      }
                       className={
-                        student.active === true
+                        student.subscriptions.some(
+                          (s) => s.status === StatusType.ATIVO,
+                        )
                           ? "bg-green-600/20 text-green-500"
                           : "bg-muted text-muted-foreground"
                       }
                     >
-                      {student.active === true ? "Ativo" : "Inativo"}
-                    </Badge>
+                      {student.subscriptions.some(
+                        (s) => s.status === StatusType.ATIVO,
+                      )
+                        ? "Ativo"
+                        : "Inativo"}
+                    </Stack>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatDate(student.entryDate.toString())}
+                    {student.entryDate
+                      .toString()
+                      .split("T")[0]
+                      .split("-")
+                      .reverse()
+                      .join("/")}
                   </TableCell>
                   <TableCell>
                     <ButtonGroup className="ml-auto">

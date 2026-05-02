@@ -1,16 +1,43 @@
+import Plan from "./plans";
+import Subscription from "./subscriptions";
+
 export default interface Student {
   id: string;
   name: string;
   email: string;
-  active: boolean;
   phone?: string;
-  martialArtType: string;
-  belt: BeltGraduation;
   entryDate: Date;
+  subscriptions: Subscription[];
 }
 
-interface BeltGraduation {
-  cod: number;
+export interface NewStudent {
   name: string;
-  color: string;
+  gender: number;
+  birthdate: Date;
+  entryDate: Date;
+  documentNumber: string;
+  personType: number;
+  phone: string;
+  street: string;
+  number: number;
+  complement: string;
+  district: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  beltId: number;
+  martialArtId: number;
+  roleId: number;
+  unitId: string;
+  username: string;
+  password: string;
+  plan: InitialPlan;
+}
+
+export interface InitialPlan {
+  martialArtCod: number;
+  unitPrice: number;
+  durationInMonths: number;
+  planType: number;
+  beltCod: number;
 }
