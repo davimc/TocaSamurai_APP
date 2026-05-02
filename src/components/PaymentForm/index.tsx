@@ -17,6 +17,7 @@ import Student from "@/models/students";
 import React, { useState } from "react";
 
 import { PaymentWithStudent } from "@/models/payments";
+import Input from "../atomic/Input";
 
 interface PaymentFormProps {
   infos: Student[];
@@ -118,47 +119,42 @@ export default function PaymentForm({ infos, onAddPayment }: PaymentFormProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <TextField
+                  <Input
                     id="amount"
                     label="Valor (R$)"
-                    variant="outlined"
                     type="number"
-                    minRows="0"
+                    // minRows="0"
                     value={formData.amount}
                     onChange={(e) =>
                       setFormData({ ...formData, amount: e.target.value })
                     }
-                    className="bg-input border-border text-foreground"
                     required
                   />
                 </div>
                 <div className="space-y-2">
                   {/* todo: Verificar este campo */}
-                  <TextField
+                  <Input
                     id="due_date"
                     label="Vencimento"
-                    variant="outlined"
                     type="date"
                     value={formData.due_date}
                     onChange={(e) =>
                       setFormData({ ...formData, due_date: e.target.value })
                     }
-                    className="bg-input border-border text-foreground"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <TextField
+                <Input
                   id="description"
+                  width="[90%]"
                   value={formData.description}
-                  sx={{ width: "90%" }}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
                   placeholder="Mensalidade, Taxa de matricula, etc."
-                  className="bg-input border-border text-foreground"
                 />
               </div>
 
