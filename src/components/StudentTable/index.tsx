@@ -23,7 +23,7 @@ import Pencil from "@mui/icons-material/CreateOutlined";
 import View from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { useState } from "react";
-import StructuredTableCell from "../celular/StructuredTableCell";
+import StructuredTableCell from "../celular/StructuredSubscriptionTableCell";
 import { StatusType } from "@/models/subscriptions";
 
 interface StudentsTableProps {
