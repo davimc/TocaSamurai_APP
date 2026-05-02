@@ -25,6 +25,7 @@ import LogoutIcon from "@mui/icons-material/LogoutOutlined";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const DRAWER_WIDTH = 256;
 
@@ -37,10 +38,9 @@ export default function Sidebar() {
     { name: "Pagamentos", href: "/payments", icon: CreditCardIcon },
     { name: "Horários", href: "/schedules", icon: CalendarMonthIcon },
   ];
-
+  const { logout } = useAuth();
   const handleLogout = () => {
-    console.log("Saindo...");
-    // Adicione aqui sua lógica de limpeza de token
+    logout(); // Chama a função de logout do Contexto
   };
 
   return (
