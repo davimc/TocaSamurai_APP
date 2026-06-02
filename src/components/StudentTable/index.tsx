@@ -35,6 +35,16 @@ export function StudentsTable({ studentsList }: StudentsTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const formatEntryDate = (raw: unknown) => {
+    if (!raw) return "-";
+
+    const date =
+      raw instanceof Date ? raw : new Date(raw as string | number);
+
+    if (Number.isNaN(date.getTime())) return "-";
+    return date.toLocaleDateString("pt-BR");
+  };
+
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -42,10 +52,6 @@ export function StudentsTable({ studentsList }: StudentsTableProps) {
       .join("")
       .toUpperCase()
       .slice(0, 2);
-  };
-
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("pt-BR");
   };
 
   return (
@@ -163,12 +169,7 @@ export function StudentsTable({ studentsList }: StudentsTableProps) {
                     </Stack>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {student.entryDate
-                      .toString()
-                      .split("T")[0]
-                      .split("-")
-                      .reverse()
-                      .join("/")}
+                    {formatEntryDate(student.entryDate)}
                   </TableCell>
                   <TableCell>
                     <ButtonGroup className="ml-auto">

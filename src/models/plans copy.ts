@@ -1,5 +1,3 @@
-import MartialArt from "./martialArt";
-
 export default interface Plan {
   title: string;
   description: string;
@@ -24,4 +22,15 @@ export interface PlanSubscription {
   title: string;
   description: string;
   martialArt: string;
+}
+export interface BeltGraduation {
+  cod: number;
+  name: string;
+  color: string;
+}
+//TODO: passar para model de martial art
+export interface MartialArt {
+  id: string;
+  name: string;
+  belts: BeltGraduation[];
 }

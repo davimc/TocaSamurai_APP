@@ -6,7 +6,7 @@ interface InputProps {
   label?: string;
   placeholder?: string;
   type?: string | "text";
-  value?: string;
+  value?: string | number;
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -22,6 +22,7 @@ export default function Input(props: InputProps) {
       variant="outlined"
       value={props.value}
       required={props.required}
+      onChange={props.onChange}
       slotProps={
         props.type === "date"
           ? {

@@ -1,14 +1,15 @@
 import { StudentsTable } from "@/components/StudentTable";
 import { StudentForm } from "@/components/StudentForm";
-import { getStudents, createStudent } from "@/services/students";
+import { getStudents } from "@/services/students";
 import Loading from "@/components/Loading";
 import Student from "@/models/students";
 import { Suspense } from "react";
 
-import Search from "@mui/icons-material/SearchOutlined";
 import Input from "@/components/atomic/Input";
 import { cookies } from "next/headers";
 import Box from "node_modules/@mui/material/esm/Box/Box";
+import { Search } from "@mui/icons-material";
+import { Button } from "@mui/material";
 
 export default async function StudentsPage() {
   const cookieStore = await cookies();
@@ -34,9 +35,12 @@ export default async function StudentsPage() {
             </p>
           </Box>
 
-          <Box className="my-6 flex w-[100%] items-center justify-between gap-4">
+          <Box className="my-6 flex w-[100%] justify-between gap-4">
             <div className="relative max-w-sm">
               <Input placeholder="Buscar alunos..." />
+              <Button className="h-full">
+                <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              </Button>
             </div>
             <StudentForm />
           </Box>

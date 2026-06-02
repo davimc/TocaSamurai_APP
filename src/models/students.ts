@@ -1,4 +1,4 @@
-import Plan from "./plans";
+import Plan, { InitialPlan } from "./plans";
 import Subscription from "./subscriptions";
 
 export default interface Student {
@@ -12,6 +12,8 @@ export default interface Student {
 
 export interface NewStudent {
   name: string;
+  lasname: string;
+  email: string;
   gender: number;
   birthdate: Date;
   entryDate: Date;
@@ -21,12 +23,12 @@ export interface NewStudent {
   street: string;
   number: number;
   complement: string;
-  district: string;
+  neighborhood: string;
   city: string;
   state: string;
   postalCode: string;
-  beltId: number;
-  martialArtId: number;
+  beltId: string;
+  martialArtId: string;
   roleId: number;
   unitId: string;
   username: string;
@@ -34,10 +36,7 @@ export interface NewStudent {
   plan: InitialPlan;
 }
 
-export interface InitialPlan {
-  martialArtCod: number;
-  unitPrice: number;
-  durationInMonths: number;
-  planType: number;
-  beltCod: number;
+export interface StudentShort {
+  id: string;
+  name: string;
 }
