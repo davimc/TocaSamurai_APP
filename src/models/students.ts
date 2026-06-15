@@ -1,5 +1,5 @@
 import Plan, { InitialPlan } from "./plans";
-import Subscription from "./subscriptions";
+import Subscription, { InitialSubscription } from "./subscriptions";
 
 export default interface Student {
   id: string;
@@ -12,11 +12,11 @@ export default interface Student {
 
 export interface NewStudent {
   name: string;
-  lasname: string;
+  lastname: string;
   email: string;
   gender: number;
-  birthdate: Date;
-  entryDate: Date;
+  birthdate: string;
+  entryDate: string;
   documentNumber: string;
   personType: number;
   phone: string;
@@ -28,14 +28,45 @@ export interface NewStudent {
   state: string;
   postalCode: string;
   beltId: string;
+  beltLevel: number;
   martialArtId: string;
-  roleId: number;
+  roleId?: number | 3;
   unitId: string;
   username: string;
   password: string;
-  plan: InitialPlan;
+  // plan: InitialPlan;
+  subscription: InitialSubscription
 }
-
+export interface FormDataStudent {
+  name: string;
+  lastname: string;
+  email: string;
+  gender: number;
+  birthdate: string;
+  entryDate: string;
+  documentNumber: string;
+  personType: number;
+  phone: string;
+  street: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  martialArt: string;
+  
+  unidade: string;
+  username: string;
+  password: string,
+  due_date: string,
+  roleId: number,
+  preferencePaymentType: string,
+  plan: string,
+  professor: string,
+  belt: string;
+  grau: number
+}
 export interface StudentShort {
   id: string;
   name: string;

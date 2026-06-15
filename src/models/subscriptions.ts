@@ -12,6 +12,13 @@ export default interface Subscription {
   plan: PlanSubscription;
 }
 
+export interface InitialSubscription {
+  dueDate: string;
+  paymentPreference: string;
+  professorId: string;
+  planId: string;
+}
+
 export enum StatusType {
   ATIVO = 1,
   SUSPENSO = 2,

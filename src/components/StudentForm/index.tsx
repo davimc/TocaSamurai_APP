@@ -20,7 +20,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { NewStudent } from "@/models/students";
+import { NewStudent, FormDataStudent } from "@/models/students";
 import Input from "../atomic/Input";
 import { createStudent } from "@/services/students";
 import { loadUnitInfos } from "@/services/units";
@@ -39,19 +39,21 @@ export function StudentForm() {
 
   const [loading, setLoading] = useState(false);
   const dataAtual = new Date();
+  const dueDate = new Date();
+  dueDate.setMonth(dataAtual.getMonth() + 1);
   const [unitsInfo, setUnitsInfo] = useState<UnitWithProfessors[] | null>(null);
   const [unitSelected, setUnitSelected] = useState<UnitWithProfessors | null>(
     null,
   );
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataStudent>({
     name: "",
-    lasname: "",
+    lastname: "",
     email: "",
     gender: 1,
     birthdate: dataAtual.getFullYear() - 5 + "-01-01",
     entryDate: dataAtual.toISOString().split("T")[0],
     documentNumber: "",
-    personType: "Física",
+    personType: 1,
     phone: "",
     street: "",
     number: "",
@@ -61,23 +63,54 @@ export function StudentForm() {
     state: "",
     postalCode: "",
     martialArt: "",
-    belt: "",
     unidade: "",
     username: "",
     password: "",
-    due_date: new Date().toISOString().split("T")[0],
+    due_date: dueDate.toISOString().split("T")[0],
+    roleId: 3,
     preferencePaymentType: "PIX",
-    plan: "Mensal",
+    plan: "",
     professor: "",
-    faixa: "",
-    grau: 0
+    belt: "",
+    grau: 0,
   });
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
-
     setLoading(true);
-
+    console.log(formData);
+    const studentData: NewStudent = {
+      name: formData.name,
+      lastname: formData.lastname,
+      email: formData.email,
+      phone: formData.phone,
+      gender: formData.gender,
+      birthdate: formData.birthdate.toString().split("T")[0],
+      entryDate: formData.entryDate.toString().split("T")[0],
+      documentNumber: formData.documentNumber,
+      personType:+formData.personType,
+      street: formData.street,
+      number: parseInt(formData.number),
+      complement: formData.complement,
+      neighborhood: formData.neighborhood,
+      city: formData.city,
+      state: formData.state,
+      postalCode: formData.postalCode,
+      beltId: formData.belt,
+      beltLevel: formData.grau,
+      martialArtId: martialArts.find(art => art.name === formData.martialArt)?.id || '',
+      roleId: formData.roleId,
+      unitId: formData.unidade,
+      username: formData.username,
+      password: formData.password,
+      subscription: {
+        dueDate: parseInt(formData.due_date.toString().split("-")[2]),
+        paymentPreference: formData.preferencePaymentType,
+        professorId: formData.professor,
+        planId: formData.plan
+      }
+    };
+    await onAddFunction(studentData);
     setLoading(false);
     setOpen(false);
     // setFormData({
@@ -100,7 +133,16 @@ export function StudentForm() {
       console.error("Erro na requisição:", error);
     }
   };
-
+  const martialArts = [
+    { id: '0', name: 'MMA' },
+    { id: 'aa1fe13a-b231-4997-a8e6-18319cbbe464', name: 'Jiu Jitsu' },
+    { id: '1', name: 'Karaté' },
+    { id: '2', name: 'Taekwondo' },
+    { id: '3', name: 'Kickboxing' },
+    { id: '4', name: 'Boxe' },
+    { id: '5', name: 'Muay Thai' },
+    { id: '6', name: 'Judo' },
+  ];
 
   return (
     <>
@@ -118,11 +160,11 @@ export function StudentForm() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <Box className="space-y-2 flex justify-between">
                 <Input label="Nome" width="2/5" value={formData.name} onChange={(e) => setFormData({...formData, name:e.target.value})}/>
-                <Input label="Sobrenome" width=" 3/5" value={formData.lasname} />
+                <Input label="Sobrenome" width=" 3/5" value={formData.lastname} onChange={(e) => setFormData({...formData, lastname:e.target.value})}/>
                 
               </Box>
               <Box className="space-y-2 flex justify-between">
-                <Input label="Email" type="email" width=" 3/5" value={formData.lasname} />
+                <Input label="Email" type="email" width=" 3/5" value={formData.email} onChange={(e) => setFormData({...formData, email:e.target.value})} />
                 <Select className={`w-2/5`}label="Genero" value={formData.gender} 
                 onChange={(e) => setFormData({...formData, gender: e.target.value})}
                 >
@@ -143,23 +185,28 @@ export function StudentForm() {
                   width="2/5"
                   type="date"
                   value={formData.birthdate}
+                  onChange={(e) => setFormData({ ...formData, birthdate: e.target.value })}
                 />
               <Input
                     id="due_date"
                     type="date"
-                    label="Vencimento"
+                    label="Primeiro Vencimento"
                     value={formData.due_date}
-                    onChange={(e) =>
+                    onChange={(e) => 
                       setFormData({ ...formData, due_date: e.target.value })
                     }
                     
                     required
                   />
               </Box>
-              <Box className="space-y-2 flex justify-between">
+              <Box className="space-y-2 flex justify-between items-center">
                 <FormControl>
                   <FormLabel>Tipo de Pessoa</FormLabel>
-                  <RadioGroup>
+                  <RadioGroup row value={formData.personType} onChange={(e) => {
+                    setFormData({...formData, personType: +e.target.value})
+                    console.log(formData.personType);
+                  }
+                    }>
                     <FormControlLabel value={1} label={"Física"} control={<Radio/>}/>
                     <FormControlLabel value={2} label={"Jurídica"} control={<Radio/>}/>
                   </RadioGroup>
@@ -172,7 +219,7 @@ export function StudentForm() {
                   onChange={(e) => setFormData({...formData, documentNumber: e.target.value})}
                 />
               </Box>
-              <Container>
+              
                 <Box className="space-y-2 flex justify-between">
                     <Input
                   label="CEP"
@@ -229,20 +276,24 @@ export function StudentForm() {
                     onChange={(e) => setFormData({...formData, state: e.target.value})}
                   />
                 </Box>
-              </Container>
-              <Container className="flex flex-col w-full gap-3">
+              
               <Box className="flex-grow flex justify-between">
                 
               <FormControl className="w-2/6">
               <InputLabel id="select-label">Arte Marcial</InputLabel>  
+              
                 <Select
                 label="Arte Marcial"
                 
                   value={formData.martialArt}
                   
                   onChange={(e) => {
-                    setFormData({ ...formData, martialArt: e.target.value})
-                    handleSelectMartialArt(e.target.value);
+                    const selectedMartialArt = e.target.value;
+                    const selectedMartialArtObj = martialArts.find(art => art.name === selectedMartialArt) ?? {id: '', name: ''};
+                    console.log(selectedMartialArtObj);
+                    console.log(selectedMartialArtObj);
+                    setFormData((prev) => ({ ...prev, martialArt: selectedMartialArtObj.name }));
+                    handleSelectMartialArt(selectedMartialArtObj.id);
                   }
                   }
                   sx={{
@@ -250,14 +301,12 @@ export function StudentForm() {
                     
                   }}
                 >
-                  <MenuItem value="MMA">MMA</MenuItem>
-                  <MenuItem value="Jiu Jitsu">JJ</MenuItem>
-                  <MenuItem value="Karaté">Karaté</MenuItem>
-                  <MenuItem value="Taekwondo">Taekwondo</MenuItem>
-                  <MenuItem value="Kickboxing">Kickboxing</MenuItem>
-                  <MenuItem value="Boxe">Boxe</MenuItem>
-                  <MenuItem value="Muay Thai">Muay Thai</MenuItem>
-                  <MenuItem value="Judo">Judo</MenuItem>
+                  {martialArts.map((art) => (
+                    <MenuItem key={art.id} value={art.name}>
+                      {art.name}
+                    </MenuItem>
+                  ))
+                  }
                 </Select>
                 </FormControl>
                 <FormControl className="w-4/6">
@@ -309,7 +358,7 @@ export function StudentForm() {
                         }}
                       >
                         {unitSelected.plans.map((plan) => (
-                          <MenuItem key={plan.id} value={plan.title}>
+                          <MenuItem key={plan.id} value={plan.id}>
                             <p className="flex justify-between">
                               <span>{plan.title}</span> <span>{plan.price}</span>
                             </p>
@@ -333,7 +382,7 @@ export function StudentForm() {
                         }}
                       >
                         {unitSelected.professors.map((professor) => (
-                          <MenuItem key={professor.id} value={professor.name}>
+                          <MenuItem key={professor.id} value={professor.id}>
                             <p>{professor.name}</p>
                           </MenuItem>
                         ))}
@@ -344,17 +393,17 @@ export function StudentForm() {
                     <FormControl fullWidth className="flex-grow w-3/5 m-0 p-0">
                     <InputLabel id="select-label">Faixa</InputLabel>  
                     <Select
-                      value={formData.faixa}
+                      value={formData.belt}
                       className="w-3/4"
                       onChange={(e) =>
-                        setFormData((prev) => ({ ...prev, faixa: e.target.value }))
+                        setFormData((prev) => ({ ...prev, belt: e.target.value }))
                       }
                       sx={{
                         width: "100%",
                       }}
                     >
                       {unitSelected.belts.reverse().map((belt) => (
-                        <MenuItem key={belt.id} value={belt.name}>
+                        <MenuItem key={belt.id} value={belt.id}>
                           <p className={`bg-[${belt.color}]`}>
                             <span >{belt.name}</span>
                           </p>
@@ -362,11 +411,10 @@ export function StudentForm() {
                       ))}
                     </Select>
                       </FormControl>
-                      <Input type="number"  label="Grau atual" ></Input>
+                      <Input type="number"  label="Grau atual" value={formData.grau} onChange={(e) => setFormData({...formData, grau: +e.target.value})}></Input>
                   </Box>
                   </>
                   )}
-                </Container>
                
                 
 

@@ -5,8 +5,8 @@ interface InputProps {
   width?: string | "1";
   label?: string;
   placeholder?: string;
-  type?: string | "text";
-  value?: string | number;
+  type?: string | "text" | "date" | "email" | "password";
+  value?: string | number | Date;
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
