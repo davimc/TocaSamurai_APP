@@ -13,7 +13,7 @@ export default interface Subscription {
 }
 
 export interface InitialSubscription {
-  dueDate: string;
+  dueDate: number;
   paymentPreference: string;
   professorId: string;
   planId: string;

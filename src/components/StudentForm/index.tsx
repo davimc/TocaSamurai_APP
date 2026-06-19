@@ -20,13 +20,15 @@ import {
   InputLabel,
 } from "@mui/material";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { NewStudent, FormDataStudent } from "@/models/students";
+import Student, { NewStudent, FormDataStudent } from "@/models/students";
 import Input from "../atomic/Input";
 import { createStudent } from "@/services/students";
 import { loadUnitInfos } from "@/services/units";
 import { UnitWithProfessors } from "@/models/units";
 
-export function StudentForm() {
+//TODO: refactor this component, it's too big and has too much responsibility, maybe split it into multiple steps and components, also add validation and error handling
+// And maybe move the form state to a custom hook, to make it more reusable and easier to test
+export function StudentForm(student?: Student) {
   async function onAddFunction(student: NewStudent) {
     await createStudent(student);
   }
@@ -54,6 +56,7 @@ export function StudentForm() {
     entryDate: dataAtual.toISOString().split("T")[0],
     documentNumber: "",
     personType: 1,
+    //todo
     phone: "",
     street: "",
     number: "",
@@ -64,10 +67,13 @@ export function StudentForm() {
     postalCode: "",
     martialArt: "",
     unidade: "",
+    //todo -> virou email
     username: "",
+    //todo -> padrão 12345678 e quando eu lançar a parte do aluno eu coloco para que esse mude após receber (senha que expira em 7 dias)
     password: "",
-    due_date: dueDate.toISOString().split("T")[0],
+    due_date: 1,
     roleId: 3,
+    //todo  -> Acho que por agora eu não preciso adicionar isso.
     preferencePaymentType: "PIX",
     plan: "",
     professor: "",
@@ -77,8 +83,7 @@ export function StudentForm() {
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
-    setLoading(true);
-    console.log(formData);
+    setLoading(true);    
     const studentData: NewStudent = {
       name: formData.name,
       lastname: formData.lastname,
@@ -101,10 +106,10 @@ export function StudentForm() {
       martialArtId: martialArts.find(art => art.name === formData.martialArt)?.id || '',
       roleId: formData.roleId,
       unitId: formData.unidade,
-      username: formData.username,
-      password: formData.password,
+      username: formData.email,
+      password: '12345678',
       subscription: {
-        dueDate: parseInt(formData.due_date.toString().split("-")[2]),
+        dueDate: formData.due_date,
         paymentPreference: formData.preferencePaymentType,
         professorId: formData.professor,
         planId: formData.plan
@@ -159,13 +164,13 @@ export function StudentForm() {
           <DialogTitle className="text-foreground">Registrar Aluno</DialogTitle>
             <form onSubmit={handleSubmit} className="space-y-4">
               <Box className="space-y-2 flex justify-between">
-                <Input label="Nome" width="2/5" value={formData.name} onChange={(e) => setFormData({...formData, name:e.target.value})}/>
-                <Input label="Sobrenome" width=" 3/5" value={formData.lastname} onChange={(e) => setFormData({...formData, lastname:e.target.value})}/>
+                <Input label="Nome" width="2/5" value={formData.name} onChange={(e) => setFormData({...formData, name:e.target.value})} required/>
+                <Input label="Sobrenome" width=" 3/5" value={formData.lastname} onChange={(e) => setFormData({...formData, lastname:e.target.value})} required/>
                 
               </Box>
               <Box className="space-y-2 flex justify-between">
-                <Input label="Email" type="email" width=" 3/5" value={formData.email} onChange={(e) => setFormData({...formData, email:e.target.value})} />
-                <Select className={`w-2/5`}label="Genero" value={formData.gender} 
+                <Input label="Email" type="email" width=" 3/5" value={formData.email} onChange={(e) => setFormData({...formData, email:e.target.value})} required />
+                <Select className={`w-2/5`}label="Genero" value={formData.gender} required
                 onChange={(e) => setFormData({...formData, gender: e.target.value})}
                 >
                   <MenuItem value={1}>
@@ -186,25 +191,39 @@ export function StudentForm() {
                   type="date"
                   value={formData.birthdate}
                   onChange={(e) => setFormData({ ...formData, birthdate: e.target.value })}
+                  required
                 />
-              <Input
-                    id="due_date"
-                    type="date"
-                    label="Primeiro Vencimento"
-                    value={formData.due_date}
-                    onChange={(e) => 
-                      setFormData({ ...formData, due_date: e.target.value })
-                    }
+                <FormControl className="w-2/6">
+              <InputLabel id="select-label">Data Vencimento</InputLabel>  
+              
+                <Select 
+                label="Dia de Vencimento"
+                
+                  value={formData.due_date}
+                  
+                  onChange={(e) => 
+                    setFormData((prev) => ({ ...prev, due_date: +e.target.value }))
+                  
+                  }
+                  sx={{
+                    width: "80%",
                     
-                    required
-                  />
+                  }}
+                  required
+                >
+                  {Array.from({length: 31}, (_, i) => i + 1).map((day) => (
+                    <MenuItem key={day} value={day}>
+                      {day}
+                    </MenuItem>
+                  ))}
+                </Select>
+                </FormControl>
               </Box>
               <Box className="space-y-2 flex justify-between items-center">
                 <FormControl>
                   <FormLabel>Tipo de Pessoa</FormLabel>
                   <RadioGroup row value={formData.personType} onChange={(e) => {
                     setFormData({...formData, personType: +e.target.value})
-                    console.log(formData.personType);
                   }
                     }>
                     <FormControlLabel value={1} label={"Física"} control={<Radio/>}/>
@@ -217,7 +236,9 @@ export function StudentForm() {
                   type="text"
                   value={formData.documentNumber}
                   onChange={(e) => setFormData({...formData, documentNumber: e.target.value})}
+                  required
                 />
+                
               </Box>
               
                 <Box className="space-y-2 flex justify-between">
@@ -227,6 +248,7 @@ export function StudentForm() {
                   type="text"
                   value={formData.postalCode}
                   onChange={(e) => setFormData({...formData, postalCode: e.target.value})}
+                  required
                 />
                 <Input
                     label="Rua"
@@ -234,6 +256,7 @@ export function StudentForm() {
                     type="text"
                     value={formData.street}
                     onChange={(e) => setFormData({...formData, street: e.target.value})}
+                    required
                 />
                 </Box>
                 <Box className="space-y-2 flex justify-between">                  
@@ -243,6 +266,7 @@ export function StudentForm() {
                     type="text"
                     value={formData.number}
                     onChange={(e) => setFormData({...formData, number: e.target.value})}
+                    required
                 />
                   <Input
                     label="Complemento"
@@ -256,8 +280,18 @@ export function StudentForm() {
                   <Input
                     label="Bairro"
                     type="text"
+                    width="1/2"
                     value={formData.neighborhood}
                     onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
+                    required
+                />
+                <Input
+                    label="Telefone"
+                    type="text"
+                    width="1/2"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+
                 />
                 </Box>
                 <Box className="space-y-2 flex justify-between">
@@ -267,6 +301,7 @@ export function StudentForm() {
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({...formData, city: e.target.value})}
+                    required
                 />
                   <Input
                     label="Estado"
@@ -274,6 +309,7 @@ export function StudentForm() {
                     type="text"
                     value={formData.state}
                     onChange={(e) => setFormData({...formData, state: e.target.value})}
+                    required
                   />
                 </Box>
               
@@ -290,16 +326,15 @@ export function StudentForm() {
                   onChange={(e) => {
                     const selectedMartialArt = e.target.value;
                     const selectedMartialArtObj = martialArts.find(art => art.name === selectedMartialArt) ?? {id: '', name: ''};
-                    console.log(selectedMartialArtObj);
-                    console.log(selectedMartialArtObj);
                     setFormData((prev) => ({ ...prev, martialArt: selectedMartialArtObj.name }));
                     handleSelectMartialArt(selectedMartialArtObj.id);
                   }
                   }
                   sx={{
                     width: "80%",
-                    
                   }}
+                    required
+
                 >
                   {martialArts.map((art) => (
                     <MenuItem key={art.id} value={art.name}>
@@ -332,6 +367,7 @@ export function StudentForm() {
                     sx={{
                       width: "100%",
                     }}
+                    required
                   >
                     {unitsInfo?.map((unit) => (
                       <MenuItem key={unit.id} value={unit.id}>
@@ -356,6 +392,7 @@ export function StudentForm() {
                         sx={{
                           width: "100%",
                         }}
+                        required
                       >
                         {unitSelected.plans.map((plan) => (
                           <MenuItem key={plan.id} value={plan.id}>
@@ -380,6 +417,7 @@ export function StudentForm() {
                         sx={{
                           width: "100%",
                         }}
+                        required
                       >
                         {unitSelected.professors.map((professor) => (
                           <MenuItem key={professor.id} value={professor.id}>
@@ -401,6 +439,7 @@ export function StudentForm() {
                       sx={{
                         width: "100%",
                       }}
+                      required
                     >
                       {unitSelected.belts.reverse().map((belt) => (
                         <MenuItem key={belt.id} value={belt.id}>
@@ -411,48 +450,11 @@ export function StudentForm() {
                       ))}
                     </Select>
                       </FormControl>
-                      <Input type="number"  label="Grau atual" value={formData.grau} onChange={(e) => setFormData({...formData, grau: +e.target.value})}></Input>
+                      <Input type="number"  label="Grau atual" value={formData.grau} onChange={(e) => setFormData({...formData, grau: +e.target.value})} required></Input>
                   </Box>
                   </>
                   )}
                
-                
-
-              <div className="grid grid-cols-2 gap-4">
-                {/* <div className="space-y-2">
-                  <TextField
-                    id="amount"
-                    label="Valor (R$)"
-                    type="number"
-                    inputProps={{ min: "0" }}
-                    variant="outlined"
-                    value={formData.amount}
-                    onChange={(e) =>
-                      setFormData({ ...formData, amount: e.target.value })
-                    }
-                    className="bg-input border-border text-foreground"
-                  />
-                </div> */}
-                <Box className="space-y-2">
-                  
-                </Box>
-              </div>
-
-              {/* <div className="space-y-2">
-                <TextField
-                  id="description"
-                  label="Descrição"
-                  variant="outlined"
-                  value={formData.description}
-                  sx={{ width: "90%" }}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  placeholder="Mensalidade, Taxa de matricula, etc."
-                  className="bg-input border-border text-foreground"
-                />
-              </div> */}
-
               <div className="flex justify-end gap-2 pt-4">
                 <Button
                   type="button"

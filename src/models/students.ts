@@ -59,7 +59,7 @@ export interface FormDataStudent {
   unidade: string;
   username: string;
   password: string,
-  due_date: string,
+  due_date: number,
   roleId: number,
   preferencePaymentType: string,
   plan: string,
